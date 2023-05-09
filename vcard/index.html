@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Générateur de cartes de visite</title>
+  <link rel="stylesheet" href="style.css">
+  <LINK REL="icon" HREF="./favicon.jpg">
+
+  <style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  background-color: #f2f2f2;
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+textarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  resize: vertical;
+}
+
+button {
+  display: block;
+  margin: 20px 0;
+  padding: 10px;
+  font-size: 1.2em;
+  font-weight: bold;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.card h2 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.card p {
+  margin-bottom: 5px;
+}
+
+footer {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+}
+
+footer p {
+  margin: 0;
+  font-size: 0.8em;
+}
+
+  </style>
+
+<body>
+  <header>
+    <h1>Générateur de cartes de visite</h1>
+  </header>
+  <main>
+    <form>
+      <div class="form-group">
+        <label for="numbers">Numéros de téléphone :</label>
+        <textarea id="numbers"></textarea>
+      </div>
+      <button type="button" onclick="generateCards()">Générer les cartes de visite</button>
+    </form>
+    <div id="cards"></div>
+    <textarea id="result" style="display: none;"></textarea>
+  </main>
+  <footer>
+    <p>Réalisé par Santos </p>
+  </footer>
+  <script src="script.js"></script>
+</body>
+  <script>
+    function generateCards() {
+      const numbersTextarea = document.getElementById("numbers");
+      const numbers = numbersTextarea.value.trim().split("\n");
+      const names = generateNames(numbers);
+      let vCards = "";
+      for (let i = 0; i < numbers.length; i++) {
+        const vcard = generateVCard(names[i], numbers[i]);
+        vCards += vcard + "\n";
+      }
+      const resultTextarea = document.getElementById("result");
+      resultTextarea.value = vCards;
+      resultTextarea.style.display = "block";
+      const cardsDiv = document.getElementById("cards");
+      cardsDiv.innerHTML = "";
+    }
+
+    function generateNames(numbers) {
+  const names = [];
+  const alphabet = "AZERTYUIOPQSDFGHJKLMWXCVBN";
+  const maxNumber = 30;
+
+  for (let i = 0; i < numbers.length; i++) {
+    const randomLetterIndex = Math.floor(Math.random() * alphabet.length);
+    const randomLetter = alphabet[randomLetterIndex];
+    const randomNum = Math.floor(Math.random() * (maxNumber + 1));
+    const name = `${randomLetter}${randomLetter}${randomNum < 10 ? '0' : ''}${randomNum}`;
+    names.push(name);
+  }
+
+  return names;
+}
+
+
+    function generateVCard(name, number) {
+      const vcard = `BEGIN:VCARD
+VERSION:4.0
+N:${name};;;;
+FN:${name}
+TEL;TYPE=cell:${addPrefix(number)}
+END:VCARD`;
+      return vcard;
+    }
+
+    function addPrefix(number) {
+      if (number.startsWith("966")) {
+        return `+${number}`;
+      }
+      return number;
+    }
+  </script>
+</body>
+</html>
